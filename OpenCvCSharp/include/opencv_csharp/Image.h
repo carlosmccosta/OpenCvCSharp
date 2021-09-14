@@ -8,7 +8,7 @@ namespace OpenCvCSharp
 	public ref class Image
 	{
 	public:
-		Image(int height, int width, int type, IntPtr data, bool freeMatDataOnDestructor);
+		Image(int height, int width, int type, IntPtr data, int rowStride, bool freeMatDataOnDestructor);
 		~Image();
 		!Image();
 

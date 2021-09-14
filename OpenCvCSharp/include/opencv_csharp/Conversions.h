@@ -11,6 +11,7 @@ namespace OpenCvCSharp
 	public ref class Conversions
 	{
 	public:
+		static Bitmap^ ImageToBitmap(Image^ image);
 		static Image^ BitmapToImage(Bitmap^ bitmap, BitmapData^ bitmapData);
 		static int PixelFormatToOpenCvType(PixelFormat format);
 	};

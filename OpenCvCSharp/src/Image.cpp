@@ -2,9 +2,9 @@
 
 namespace OpenCvCSharp
 {
-	Image::Image(int height, int width, int type, IntPtr data, bool freeMatDataOnDestructor)
+	Image::Image(int height, int width, int type, IntPtr data, int rowStride, bool freeMatDataOnDestructor)
 	{
-		_mat = new cv::Mat(height, width, type, data.ToPointer());
+		_mat = new cv::Mat(height, width, type, data.ToPointer(), (size_t)rowStride);
 		_freeMatDataOnDestructor = freeMatDataOnDestructor;
 	}
 
