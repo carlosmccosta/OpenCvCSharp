@@ -11,11 +11,15 @@ namespace OpenCvCSharp
 			return nullptr;
 		}
 
-		PixelFormat pixelFormat = PixelFormat::Format8bppIndexed;
+		PixelFormat pixelFormat = PixelFormat::Format24bppRgb;
 		cv::Mat imageToCopy = *image->Mat;
-		if (imageToCopy.channels() == 3)
+		if (imageToCopy.channels() == 1)
 		{
-			pixelFormat = PixelFormat::Format24bppRgb;
+			cv::cvtColor(*image->Mat, imageToCopy, cv::COLOR_GRAY2RGB);
+		}
+		else
+		{
+			imageToCopy = *image->Mat;
 		}
 
 		Bitmap^ bitmap = gcnew Bitmap(imageToCopy.cols, imageToCopy.rows, pixelFormat);
