@@ -12,6 +12,6 @@ namespace OpenCvCSharp
 	public ref class Calib3d
 	{
 	public:
-		static void CorrectImageDistortion(Image^ image, CameraIntrinsics^ intrinsics);
+		static bool CorrectImageDistortion(Image^ image, CameraIntrinsics^ intrinsics);
 	};
 }

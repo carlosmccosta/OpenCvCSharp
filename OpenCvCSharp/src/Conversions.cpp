@@ -37,12 +37,12 @@ namespace OpenCvCSharp
 			{
 				size_t sourceOffset = i * imageToCopy.step;
 				size_t destinationOffset = i * rasterImageBitmapData->Stride;
-				memcpy(((uchar*)rasterImageBitmapData->Scan0.ToPointer()) + destinationOffset, imageToCopy.data + sourceOffset, matStep);
+				std::memcpy(((uchar*)rasterImageBitmapData->Scan0.ToPointer()) + destinationOffset, imageToCopy.data + sourceOffset, matStep);
 			}
 		}
 		else
 		{
-			memcpy(rasterImageBitmapData->Scan0.ToPointer(), imageToCopy.data, numberOfBytesToCopy);
+			std::memcpy(rasterImageBitmapData->Scan0.ToPointer(), imageToCopy.data, numberOfBytesToCopy);
 		}
 
 		bitmap->UnlockBits(rasterImageBitmapData);
