@@ -49,6 +49,9 @@ namespace OpenCvCSharp
 			void set(bool value) { _freeMatDataOnDestructor = value; }
 		}
 
+		bool copyDataFromOtherImage(cv::Mat other_image);
+
+
 	protected:
 		cv::Mat* _mat;
 		bool _freeMatDataOnDestructor;

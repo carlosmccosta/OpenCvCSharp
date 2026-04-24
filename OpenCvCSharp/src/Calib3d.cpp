@@ -1,3 +1,4 @@
+#include <opencv2/imgproc.hpp>
 #include <opencv_csharp/Calib3d.h>
 
 namespace OpenCvCSharp
@@ -7,28 +8,46 @@ namespace OpenCvCSharp
 		cv::Mat imageCorrected;
 		cv::undistort(*image->Mat, imageCorrected, *intrinsics->Intrinsics, *intrinsics->DistortionCoefficients, *intrinsics->Intrinsics);
 
-		size_t numberOfBytesToCopy = imageCorrected.step * imageCorrected.rows;
-		size_t numberOfBytesAvailable = image->Mat->step * image->Mat->rows;
+		return image->copyDataFromOtherImage(imageCorrected);
+	}
 
-		if (numberOfBytesToCopy <= numberOfBytesAvailable)
+
+	Calib3d::Calib3d()
+	{
+		_correctionOfProjectionImageDistortionInitialized = false;
+	}
+
+	void Calib3d::InitializeCorrectionOfProjectionImageDistortion(CameraIntrinsics^ intrinsics, int projector_horizontal_resolution, int projector_vertical_resolution)
+	{
+		_projectionRectificationMapX = new cv::Mat();
+		_projectionRectificationMapY = new cv::Mat();
+
+		cv::initInverseRectificationMap(
+			*intrinsics->Intrinsics,
+			*intrinsics->DistortionCoefficients,
+			cv::Mat_<double>::eye(3, 3),
+			*intrinsics->Intrinsics,
+			cv::Size(projector_horizontal_resolution, projector_vertical_resolution),
+			CV_32FC1,
+			*_projectionRectificationMapX,
+			*_projectionRectificationMapY
+		);
+
+		_correctionOfProjectionImageDistortionInitialized = true;
+	}
+
+
+	bool Calib3d::CorrectProjectionImageDistortion(Image^ image)
+	{
+		if (_correctionOfProjectionImageDistortionInitialized)
 		{
-			if (image->Mat->step != imageCorrected.step)
-			{
-				for (int i = 0; i < imageCorrected.rows; ++i)
-				{
-					size_t sourceOffset = i * imageCorrected.step;
-					size_t destinationOffset = i * image->Mat->step;
-					std::memcpy(image->Mat->data + destinationOffset, imageCorrected.data + sourceOffset, imageCorrected.step);
-				}
-			}
-			else
-			{
-				std::memcpy(image->Mat->data, imageCorrected.data, numberOfBytesToCopy);
-			}
+			cv::Mat imageCorrected;
+			cv::remap(*image->Mat, imageCorrected, *_projectionRectificationMapX, *_projectionRectificationMapY, cv::INTER_LINEAR);
 
-			return true;
+			return image->copyDataFromOtherImage(imageCorrected);
 		}
-
+		
 		return false;
+		
 	}
 }

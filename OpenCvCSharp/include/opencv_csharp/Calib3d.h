@@ -13,5 +13,15 @@ namespace OpenCvCSharp
 	{
 	public:
 		static bool CorrectImageDistortion(Image^ image, CameraIntrinsics^ intrinsics);
+
+		Calib3d();
+
+		void InitializeCorrectionOfProjectionImageDistortion(CameraIntrinsics^ intrinsics, int projector_horizontal_resolution, int projector_vertical_resolution);
+		bool CorrectProjectionImageDistortion(Image^ image);
+
+	protected:
+		cv::Mat* _projectionRectificationMapX;
+		cv::Mat* _projectionRectificationMapY;
+		bool _correctionOfProjectionImageDistortionInitialized;
 	};
 }
